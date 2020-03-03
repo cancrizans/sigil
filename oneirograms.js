@@ -38,21 +38,36 @@ function strokeSegment(s,spin,ctx){
 	ctx.stroke();
 }
 
-function drawSigil(seed,ctx,isRound){
+function generateSigilData(seed){
+	var rng = new Math.seedrandom(seed);
+	let flip = rng()<0.2;
+	let segs = [];
+	for(let s of segments)
+		segs.push(rng()<0.5)
+
+	return { 'flip':flip,'segs':segs};
+}
+
+function drawSigilFromData(data,ctx,isRound){
 	ctx.save();
 	ctx.rotate(-Math.PI / 4);
 
-	var rng = new Math.seedrandom(seed);
-	let isFlip = rng()<0.2;
+	
+	let isFlip = data.flip;
 	ctx.lineWidth = 0.5;
 	ctx.lineCap = isRound?"round":"square";
 
-	for(let s of segments){
-		if(rng()<0.5){
+	segments.forEach(function(s,i){
+		if(data.segs[i]){
 
 			strokeSegment(s,isFlip,ctx);
 		}
-	}
+	});
 
 	ctx.restore();
+}
+
+function drawSigil(seed,ctx,isRound){
+	let data = generateSigilData(seed);
+	drawSigilFromData(data,ctx,isRound);
 }
