@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Oneirogram Name Sigil</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Roboto&display=swap" rel="stylesheet"> 
+	<style type="text/css">
+		body {
+		    font-family: 'Roboto', sans-serif;
+		}
+		.container {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+		}
+		#inputbig {
+			font-family: 'Comfortaa', cursive;
+			font-weight: 700;
+			font-size: 40px;
+		}
+		#input {
+			margin: 30px;
+		}
+		.caption {
+			max-width: 600px;
+		}
+	</style>
+</head>
+<body>
+	<!-- Right, so now you're looking at the source, big boy
+	it's gonna take a bit more than that
+	but not too much tbh
+	sometimes, violence is the answer -->
+
+
+	<div class="container">
+		<canvas id="canvas" width="400" height="400">
+
+		</canvas>
+		<div id="inputbig"></div>
+		<input type="text" id="input" value="CANCRIZANS">
+
+
+		<div class="caption">
+			Input your name to find your Oneirogrammatic Sigil. It's fun for the whole family :) There's no secret behind it at all. It's meaningless!
+		</div>
+
+	</div>
+
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+	<script
+	src="https://code.jquery.com/jquery-3.4.1.min.js"
+	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+	crossorigin="anonymous"></script>
+	<script type="text/javascript">
+
+		var canvas = $("#canvas")[0];
+		var ctx = canvas.getContext("2d");
+		var inputBigDiv = $("#inputbig");
+		var inputField = $("#input");
+
+
+		var N = 2;
+		var segments = [];
+		for(let m = -N; m<=N; m++){
+			for(let n=-N; n<-m; n++){
+				segments.push([m,n,m+1,n]);
+				segments.push([m,n,m,n+1]);
+			}
+		}
+
+		function strokeSegment(s,spin){
+			ctx.beginPath();
+			ctx.moveTo(s[0],s[1]);
+			ctx.lineTo(s[2],s[3]);
+			ctx.stroke();
+			ctx.beginPath();
+			if(spin){
+				ctx.moveTo(-s[0],-s[1]);
+				ctx.lineTo(-s[2],-s[3]);
+			}
+			else{
+				ctx.moveTo(-s[1],-s[0]);
+				ctx.lineTo(-s[3],-s[2]);
+			}
+
+			ctx.stroke();
+		}
+
+		function drawSigil(seed){
+			ctx.save();
+			ctx.rotate(-Math.PI / 4);
+
+			var rng = new Math.seedrandom(seed);
+			let isFlip = rng()<0.2;
+			ctx.lineWidth = 0.5;
+			ctx.lineCap = "round";
+
+			for(let s of segments){
+				if(rng()<0.5){
+
+					strokeSegment(s,isFlip);
+				}
+			}
+
+			ctx.restore();
+		}
+
+		
+
+		inputField.on("input",function(){
+			//just string clean up. It's not for me. It's for you.
+			let raw = $(this).val();
+			let text = raw.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\? ]/g,"").trim().toUpperCase();
+
+			if(text == "")
+				text = "-";
+
+			inputBigDiv.text(text);
+
+			//Why? If I told you you'd laugh.
+			let seed = "&"+text;
+
+			ctx.clearRect(0,0,canvas.width,canvas.height);
+
+			ctx.save();
+
+
+			ctx.translate(canvas.width/2,canvas.width/2);
+			let scale = canvas.width / ((2*N+1)*Math.SQRT2);
+			ctx.scale(scale,scale);
+			
+
+			drawSigil(seed);
+
+			ctx.restore();
+
+
+
+		});
+
+		inputField.trigger("input");
+
+		
+
+	</script>
+
+</body>
+</html>
