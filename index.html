@@ -54,6 +54,7 @@
 	src="https://code.jquery.com/jquery-3.4.1.min.js"
 	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
 	crossorigin="anonymous"></script>
+	<script type="text/javascript" src="oneirograms.js"></script>
 	<script type="text/javascript">
 
 		var canvas = $("#canvas")[0];
@@ -62,66 +63,19 @@
 		var inputField = $("#input");
 
 
-		var N = 2;
-		var segments = [];
-		for(let m = -N; m<=N; m++){
-			for(let n=-N; n<-m; n++){
-				segments.push([m,n,m+1,n]);
-				segments.push([m,n,m,n+1]);
-			}
-		}
-
-		function strokeSegment(s,spin){
-			ctx.beginPath();
-			ctx.moveTo(s[0],s[1]);
-			ctx.lineTo(s[2],s[3]);
-			ctx.stroke();
-			ctx.beginPath();
-			if(spin){
-				ctx.moveTo(-s[0],-s[1]);
-				ctx.lineTo(-s[2],-s[3]);
-			}
-			else{
-				ctx.moveTo(-s[1],-s[0]);
-				ctx.lineTo(-s[3],-s[2]);
-			}
-
-			ctx.stroke();
-		}
-
-		function drawSigil(seed){
-			ctx.save();
-			ctx.rotate(-Math.PI / 4);
-
-			var rng = new Math.seedrandom(seed);
-			let isFlip = rng()<0.2;
-			ctx.lineWidth = 0.5;
-			ctx.lineCap = "round";
-
-			for(let s of segments){
-				if(rng()<0.5){
-
-					strokeSegment(s,isFlip);
-				}
-			}
-
-			ctx.restore();
-		}
+		
 
 		
 
 		inputField.on("input",function(){
 			//just string clean up. It's not for me. It's for you.
 			let raw = $(this).val();
-			let text = raw.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()\? ]/g,"").trim().toUpperCase();
-
-			if(text == "")
-				text = "-";
+			let text = sanitize(raw);
 
 			inputBigDiv.text(text);
 
 			//Why? If I told you you'd laugh.
-			let seed = "&"+text;
+			let seed = getSeed(text);
 
 			ctx.clearRect(0,0,canvas.width,canvas.height);
 
@@ -133,7 +87,7 @@
 			ctx.scale(scale,scale);
 			
 
-			drawSigil(seed);
+			drawSigil(seed,ctx);
 
 			ctx.restore();
 
