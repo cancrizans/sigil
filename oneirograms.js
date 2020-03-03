@@ -38,14 +38,14 @@ function strokeSegment(s,spin,ctx){
 	ctx.stroke();
 }
 
-function drawSigil(seed,ctx){
+function drawSigil(seed,ctx,isRound){
 	ctx.save();
 	ctx.rotate(-Math.PI / 4);
 
 	var rng = new Math.seedrandom(seed);
 	let isFlip = rng()<0.2;
 	ctx.lineWidth = 0.5;
-	ctx.lineCap = "round";
+	ctx.lineCap = isRound?"round":"square";
 
 	for(let s of segments){
 		if(rng()<0.5){

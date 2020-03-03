@@ -7,7 +7,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Comfortaa:700|Roboto&display=swap" rel="stylesheet"> 
 	<style type="text/css">
 		body {
-		    font-family: 'Roboto', sans-serif;
+			font-family: 'Roboto', sans-serif;
 		}
 		.container {
 			display: flex;
@@ -20,8 +20,12 @@
 			font-size: 40px;
 		}
 		#input {
-			margin: 30px;
+			margin-top: 30px;
 		}
+		#checkboxDiv{
+			margin-bottom: 30px;
+		}
+
 		.caption {
 			max-width: 600px;
 		}
@@ -39,7 +43,13 @@
 
 		</canvas>
 		<div id="inputbig"></div>
+
 		<input type="text" id="input" value="CANCRIZANS">
+		<div id="checkboxDiv">
+			<input type="checkbox" id="cb_round">
+			<span>Round caps</span>
+		</div>
+
 
 
 		<div class="caption">
@@ -49,25 +59,33 @@
 	</div>
 
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
-	<script
-	src="https://code.jquery.com/jquery-3.4.1.min.js"
-	integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
-	crossorigin="anonymous"></script>
-	<script type="text/javascript" src="oneirograms.js"></script>
-	<script type="text/javascript">
 
-		var canvas = $("#canvas")[0];
-		var ctx = canvas.getContext("2d");
-		var inputBigDiv = $("#inputbig");
-		var inputField = $("#input");
+<script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
+<script
+src="https://code.jquery.com/jquery-3.4.1.min.js"
+integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+crossorigin="anonymous"></script>
+<script type="text/javascript" src="oneirograms.js"></script>
+<script type="text/javascript">
+
+	var canvas = $("#canvas")[0];
+	var ctx = canvas.getContext("2d");
+	var inputBigDiv = $("#inputbig");
+	var inputField = $("#input");
+
+	var doRounding = true;
+
+	$("#cb_round").prop("checked",true);
+
+	$("#cb_round").on("change",function(){
+		doRounding = $(this)[0].checked;
+		inputField.trigger("input");
+	});
 
 
-		
 
-		
 
-		inputField.on("input",function(){
+	inputField.on("input",function(){
 			//just string clean up. It's not for me. It's for you.
 			let raw = $(this).val();
 			let text = sanitize(raw);
@@ -87,7 +105,7 @@
 			ctx.scale(scale,scale);
 			
 
-			drawSigil(seed,ctx);
+			drawSigil(seed,ctx,doRounding);
 
 			ctx.restore();
 
@@ -95,11 +113,11 @@
 
 		});
 
-		inputField.trigger("input");
+	inputField.trigger("input");
 
-		
 
-	</script>
+
+</script>
 
 </body>
 </html>
