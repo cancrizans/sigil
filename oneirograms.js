@@ -34,7 +34,7 @@ function strokeSegment(s,spin,ctx){
 		ctx.moveTo(-s[1],-s[0]);
 		ctx.lineTo(-s[3],-s[2]);
 	}
-
+	
 	ctx.stroke();
 }
 
